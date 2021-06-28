@@ -5,6 +5,7 @@ import time
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
+
 start_time = time.time()
 # IM coordinates
 xk = 0.11096966105001496
@@ -112,7 +113,6 @@ def pos_to_angle2(x,y,z):
     EL_uus = np.arcsin(z)*180/np.pi
     angles = np.array([EL_uus, AZ_uus])
     return angles
-
 def pos_to_angle3(x,y,z):
     if (x > 0):
         AZ_uus = np.degrees(np.arctan(y/x))
@@ -132,13 +132,13 @@ def centralize(x,y,z):
     newZ = z - Z0
     newVECTOR = np.array([newX,newY,newZ])
     return newVECTOR
-#--------------------------------------------------------------
+#-----------------------------------------------------------------------------
 # Algandmete imporimine
 andmed=pd.read_csv("coord_orien_all.csv",header=0,
                    names=['ID','X','Y','Z','RX','RY','RZ'])
 #print('andmed',andmed.head())
 
-#--------------------------------------------------------------
+#-----------------------------------------------------------------------------
 # RX ja RZ töötlus EL ja AZ andmeteks
 
 # rz is for function orien(z)
@@ -257,7 +257,7 @@ ax.set_xlim([min_x, max_x])
 ax.set_ylim([min_y, max_y])
 ax.set_zlim([min_z, max_z])
 
-#--------------------------------------------------------------
+#-----------------------------------------------------------------------------
 # Lipu koordinaatide töötlus
 
 flag_df=pd.read_csv("lipp_coord.csv",header=0,
@@ -290,7 +290,7 @@ flag_dat = flag_corCOORD.to_numpy()
 X_flag, Y_flag, Z_flag = zip(*flag_dat)
 ax.plot(X_flag, Y_flag, Z_flag, color='orange')
 
-#--------------------------------------------------------------
+#-----------------------------------------------------------------------------
 # SWC koordinaatide töötlus
 SWC_df=pd.read_csv("SWC_coord.csv",header=0,
                    names=['ID','X','Y','Z'])
@@ -320,7 +320,7 @@ SWC_dat = SWC_corCOORD.to_numpy()
 X_SWC, Y_SWC, Z_SWC = zip(*SWC_dat)
 ax.plot(X_SWC, Y_SWC, Z_SWC, color='orange')
 
-#--------------------------------------------------------------
+#-----------------------------------------------------------------------------
 # S-band antenna koordinaatide töötlus kahes osas (Part 1/2)
 
 Sband1_df=pd.read_csv("Sband_p1_coord.csv",header=0,
@@ -351,7 +351,7 @@ Sband1_dat = Sband1_corCOORD.to_numpy()
 X_Sband1, Y_Sband1, Z_Sband1 = zip(*Sband1_dat)
 ax.plot(X_Sband1, Y_Sband1, Z_Sband1, color='orange')
 
-#--------------------------------------------------------------
+#-----------------------------------------------------------------------------
 # S-band antenna koordinaatide töötlus kahes osas (Part 2/2)
 
 Sband2_df=pd.read_csv("Sband_p2_coord.csv",header=0,
@@ -382,7 +382,87 @@ Sband2_dat = Sband2_corCOORD.to_numpy()
 X_Sband2, Y_Sband2, Z_Sband2 = zip(*Sband2_dat)
 ax.plot(X_Sband2, Y_Sband2, Z_Sband2, color='orange')
 
+#-----------------------------------------------------------------------------
+# Drawing the ladder
+ladder_df=pd.read_csv("ladder_coord.csv",header=0,
+                   names=['ID','X','Y','Z'])
 
+# The holy 6-part-step-vector-turning algorithm is applied here
+ladder_molder = []
+for i in np.arange(0, len(ladder_df), 1):
+    ladder_molder += [will_turner(ladder_df['X'][i],ladder_df['Y'][i],ladder_df['Z'][i])]
+#print(molder)  #again, made into a list of arrays
+
+ladder_modCoord = pd.DataFrame.from_records(ladder_molder, columns = list('XYZ'))
+#print(modCoord)   #arrays in list made into a DataFrame
+
+ladder_shifter = []
+for i in np.arange(0, len(ladder_modCoord), 1):
+    ladder_shifter += [centralize(ladder_modCoord['X'][i],
+                                ladder_modCoord['Y'][i],
+                                ladder_modCoord['Z'][i])]
+#print(molder)  #again, made into a list of arrays
+
+ladder_corCOORD = pd.DataFrame.from_records(ladder_shifter,
+                                          columns = ['X_ladder', 'Y_ladder', 'Z_ladder'])
+#print('\nFirst 5 shifted location coord:\n',corCOORD.head())
+
+ladder_dat = ladder_corCOORD.to_numpy()
+
+X_ladder, Y_ladder, Z_ladder = zip(*ladder_dat)
+ax.plot(X_ladder, Y_ladder, Z_ladder, color='orange')
+#-----------------------------------------------------------------------------
+# Legs done sparetly
+legs_df=pd.read_csv("legs_coord.csv",header=0,
+                   names=['ID','X','Y','Z'])
+
+# The holy 6-part-step-vector-turning algorithm is applied here
+legs_molder = []
+for i in np.arange(0, len(legs_df), 1):
+    legs_molder += [will_turner(legs_df['X'][i],legs_df['Y'][i],legs_df['Z'][i])]
+#print(molder)  #again, made into a list of arrays
+
+legs_modCoord = pd.DataFrame.from_records(legs_molder, columns = list('XYZ'))
+#print(modCoord)   #arrays in list made into a DataFrame
+
+legs_shifter = []
+for i in np.arange(0, len(legs_modCoord), 1):
+    legs_shifter += [centralize(legs_modCoord['X'][i],
+                                legs_modCoord['Y'][i],
+                                legs_modCoord['Z'][i])]
+#print(molder)  #again, made into a list of arrays
+
+legs_corCOORD = pd.DataFrame.from_records(legs_shifter,
+                                          columns = ['X_legs', 'Y_legs', 'Z_legs'])
+#print('\nFirst 5 shifted location coord:\n',corCOORD.head())
+
+legs_dat = legs_corCOORD.to_numpy()
+
+X_legs, Y_legs, Z_legs = zip(*legs_dat)
+ax.plot(X_legs[0:3], Y_legs[0:3], Z_legs[0:3], color='orange')
+ax.plot(X_legs[3:6], Y_legs[3:6], Z_legs[3:6], color='orange')
+ax.plot(X_legs[6:9], Y_legs[6:9], Z_legs[6:9], color='orange')
+ax.plot(X_legs[9:12], Y_legs[9:12], Z_legs[9:12], color='orange')
+ax.scatter(X_legs[12:len(legs_df)], Y_legs[12:len(legs_df)], 
+           Z_legs[12:len(legs_df)], color='orange')
+
+# Cylinder
+R = 2.264704932679790
+z1 = 1.30475
+z2 = 2.6095
+x = np.linspace(-R, R, 50)
+z = np.linspace(z1, z2,50)
+Xc, Zc = np.meshgrid(x, z)
+Yc = np.sqrt(R**2-Xc**2)
+#ax.plot_surface(Xc, Yc, Zc, alpha=0.2)
+#ax.plot_surface(Xc, -Yc, Zc, alpha=0.2)
+
+ax.set_xlabel('X Label')
+ax.set_ylabel('Y Label')
+ax.set_zlabel('Z Label')
+
+#-----------------------------------------------------------------------------
+#  Modling the final data
 df_new = pd.concat([andmed['ID'], corCOORD, transANG], axis=1)
 print('\nFirst 5 transformed values:\n',df_new.head(),
       '\nLast 5 transformed values:\n',df_new.tail())
@@ -393,4 +473,5 @@ df_new.to_csv(r'FINAL_CALC_test_new_pos_to_ang.csv',
 aeg = time.time() - start_time
 print("\nThe Master Code took", round(aeg, 4), "seconds aka", round(aeg*1e03, 4),
       "milliseconds \nto finish its glorious calculations.")
+
 plt.show()

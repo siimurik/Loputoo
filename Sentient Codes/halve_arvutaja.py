@@ -1,5 +1,7 @@
 import numpy as np
 import time
+import numba
+from numba import jit, njit, vectorize
 
 start_time = time.time()
 # Kaamerate vektor:
@@ -110,14 +112,14 @@ oige = -11.03
 alg = -11.034
 lopp = -11.01
 #samm = 1e-08
-samm = 1e-05
+samm = 1e-06
 
 print("Vahemik: [", alg,",",lopp,"] sammupikkusega", samm,".")
 
 a = []
 for i in np.arange(alg, lopp, samm):
     a += [i]
-
+@vectorize
 def coord_turn(angle,x,y,z):
     gamma = angle * rad
     # z-telg

@@ -47,19 +47,22 @@ ax = fig.add_subplot(111, projection='3d')
 ax.plot(X, Y, Z)
 
 # Cylinder
-x=np.linspace(-1, 1, 100)
-z=np.linspace(-2, 2, 100)
+R = 2.97383
+z1 = 1.30475
+z2 = 2.6095
+x=np.linspace(-R, R, 100)
+z=np.linspace(z1, z2, 100)
 Xc, Zc=np.meshgrid(x, z)
-Yc = np.sqrt(1-Xc**2)
-Yo = np.sqrt(1-Xc**2+Zc**2)
+Yc = np.sqrt(R**2-Xc**2)
+Yo = np.sqrt(R**2-Xc**2-Zc**2)
 
 # Draw parameters
 rstride = 20
 cstride = 10
-ax.plot_surface(Xc, Yc, Zc, alpha=0.2, rstride=rstride, cstride=cstride)
-ax.plot_surface(Xc, -Yc, Zc, alpha=0.2, rstride=rstride, cstride=cstride)
-ax.plot_surface(Xc, Yo, Zc, alpha=0.2, rstride=rstride, cstride=cstride)
-ax.plot_surface(Xc, -Yo, Zc, alpha=0.2, rstride=rstride, cstride=cstride)
+ax.plot_surface(Xc, Yc, Zc, alpha=0.2)
+ax.plot_surface(Xc, -Yc, Zc, alpha=0.2)
+ax.plot_surface(Xc, Yo, Zc, alpha=0.2)
+ax.plot_surface(Xc, -Yo, Zc, alpha=0.2)
 
 ax.set_xlabel('X Label')
 ax.set_ylabel('Y Label')
