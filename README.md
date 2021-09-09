@@ -1,6 +1,14 @@
 # Loputoo
 Sentient Codes on põhikaust, kus on fail nimega "anduril_2.5.py", mis võtab enda alla põhilised koordinaatide teisendused ja kuvab 3D kaardi.
 Selle faili tulemused on andmetabelis "FINAL_CALC.csv".
+anduril_2.5.py nõuab endaga kaasa faile 
+  test_coord.csv
+  lipp_coord.csv
+  SWC_coord.csv
+  Sband_p1_coord.csv
+  Sband_p2_coord.csv
+  ladder_coord.csv
+  legs_coord.csv
 
 Loputoo Fortran on kaust väikeste, kuid kiirete vektoralgebra arvutusteks.
 
