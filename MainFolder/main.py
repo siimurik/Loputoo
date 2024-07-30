@@ -38,6 +38,7 @@ print("Average Horizons azimuth vector:", HOR_final_avrg)
 # Initial coordinates and angles
 xk, yk, zk = 0.11096966105001496, -0.63620006179630684, 0.76350194216964518
 hx, hy, hz = HOR_final_avrg
+X0, Y0, Z0 = 1.193314605098880, 4.203848106904280, -0.534337414313240
 
 # Compute rotation angles
 alpha = -np.arctan(yk / xk)
@@ -47,7 +48,7 @@ delta = -np.arcsin(hz)
 eta = np.pi / 2
 iota = -np.arctan(hy / hx) + eta
 print("\nDegrees:\nalpha = ", np.degrees(alpha), '\nbeta =', np.degrees(beta), '\ngamma = ', np.degrees(gamma),
-      '\ndelta = ', np.degrees(delta), '\niota-eta = ', np.degrees(iota - eta), '\niota = ', np.degrees(iota))
+      '\ndelta = ', np.degrees(delta), '\neta = ', np.degrees(eta), '\niota = ', np.degrees(iota))
 
 # Initial vector rotation
 def extrinsic_to_intrinsic(x, y, z):
@@ -192,7 +193,6 @@ def vec_to_angles(x, y, z):
 
 # Centralize coordinates
 def centralize(x, y, z):
-    X0, Y0, Z0 = 1.193314605098880, 4.203848106904280, -0.534337414313240
     return np.array([x - X0, y - Y0, z - Z0])
 
 # Load data from CSV
@@ -241,7 +241,7 @@ with open(os.path.join(input_dir, "legs_coord.csv"), newline='') as csvfile:
 
 legs_data = np.array(legs_data)
 
-# The holy 6-part-step-vector-turning algorithm is applied here
+# The 6-part-step-vector-turning algorithm is applied here
 legs_molder = [sequentialRotations(x, y, z) for x, y, z in legs_data]
 
 # Centralize the coordinates
@@ -269,7 +269,7 @@ def process_additional_data(filename, color):
     ax.plot(X_add, Y_add, Z_add, color=color)
 
 # Process and plot additional datasets
-for file_name in ["lipp_coord.csv", "SWC_coord.csv", "Sband_p1_coord.csv", "Sband_p2_coord.csv", "ladder_coord.csv"]:
+for file_name in ["flag_coord.csv", "SWC_coord.csv", "Sband_p1_coord.csv", "Sband_p2_coord.csv", "ladder_coord.csv"]:
     process_additional_data(file_name, 'orange')
 
 # Plot leg segments separately
