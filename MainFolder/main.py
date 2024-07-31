@@ -12,8 +12,6 @@ input_dir = "InputFiles"
 export_dir = "OutputFiles"
 os.makedirs(export_dir, exist_ok=True)
 
-start_time = time.time()
-
 # Convert angles (elevation and azimuth) to a direction vector
 def angle_to_dir(EL, AZ):
     d = np.pi / 180  # Conversion factor from degrees to radians
