@@ -1,3 +1,8 @@
+/*
+Compile and execute with:
+    $ gcc main.c -o main -lm
+    $ ./main
+*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -62,7 +67,7 @@ int main() {
 
     double alpha = -atan(yk / xk);
     double beta = asin(zk);
-    double gamma = -11.032961419914068 * PI / 180.0;
+    double gamma = -11.0329389306380126 * PI / 180.0;
     double delta = -asin(hz);
     double eta = PI / 2;
     double iota = -atan(hy / hx) + eta;
@@ -480,7 +485,7 @@ void sequential_rotations(double x, double y, double z, double result[3]) {
     double radParam =  PI / 180.0;
     double alpha    =  80.1056830575758170 * radParam;
     double beta     =  49.7739016604574402 * radParam;
-    double gamma    = -11.0329614199140682 * radParam;
+    double gamma    = -11.0329389306380126 * radParam;  // value found using rollCALC.c
     double delta    = -50.6492951614895688 * radParam;
     double iota     =   2.2052577138069775 * radParam;
     

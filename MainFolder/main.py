@@ -43,7 +43,7 @@ X0, Y0, Z0 = 1.193314605098880, 4.203848106904280, -0.534337414313240
 # Compute rotation angles
 alpha = -np.arctan(yk / xk)
 beta = np.arcsin(zk)
-gamma = np.radians(-11.032961419914068)
+gamma = np.radians(-11.0329389306380126) # new and improved value
 delta = -np.arcsin(hz)
 eta = np.pi / 2
 iota = -np.arctan(hy / hx) + eta
