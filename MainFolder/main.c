@@ -11,6 +11,7 @@ Compile and execute with:
 #include <sys/stat.h>
 
 #define PI 3.14159265358979323846  // Define constant PI for mathematical calculations
+#define CLOCK_MONOTONIC 1
 
 void ensure_directories_exist();
 void angle_to_dir(double EL, double AZ, double dir[3]);
@@ -483,38 +484,38 @@ void extrinsic_to_intrinsic(double x, double y, double z, double result[3]) {
 void sequential_rotations(double x, double y, double z, double result[3]) {
     // Additional reference: thesis pages 23-24.
     double radParam =  PI / 180.0;
-    double alpha    =  80.1056830575758170 * radParam;
-    double beta     =  49.7739016604574402 * radParam;
-    double gamma    = -11.0329389306380126 * radParam;  // value found using rollCALC.c
-    double delta    = -50.6492951614895688 * radParam;
-    double iota     =   2.2052577138069775 * radParam;
+    double yaw1    =  80.1056830575758170 * radParam;  // yaw (z)
+    double pitch1     =  49.7739016604574402 * radParam;  // pitch (y)
+    double roll    = -11.0329389306380126 * radParam;  // roll (x) // value found using rollCALC.c
+    double pitch2    = -50.6492951614895688 * radParam;  // pitch (y)
+    double yaw2     =   2.2052577138069775 * radParam;  // yaw (z)
     
     // Define rotation matrices for each axis
-    double a1[3][3] = {{cos(alpha), -sin(alpha), 0}, {sin(alpha), cos(alpha), 0}, {0, 0, 1}};
+    double a1[3][3] = {{cos(yaw1), -sin(yaw1), 0}, {sin(yaw1), cos(yaw1), 0}, {0, 0, 1}};
     double a[3] = {0};
     for (int i = 0; i < 3; ++i) {                           // Essentially a more clever way to do
         a[i] = a1[i][0] * x + a1[i][1] * y + a1[i][2] * z;  // a [3x3]*[3x1] matrix multplication.
     }                                                       
 
-    double b2[3][3] = {{cos(beta), 0, sin(beta)}, {0, 1, 0}, {-sin(beta), 0, cos(beta)}};
+    double b2[3][3] = {{cos(pitch1), 0, sin(pitch1)}, {0, 1, 0}, {-sin(pitch1), 0, cos(pitch1)}};
     double b[3] = {0};
     for (int i = 0; i < 3; ++i) {
         b[i] = b2[i][0] * a[0] + b2[i][1] * a[1] + b2[i][2] * a[2];
     }
 
-    double g1[3][3] = {{1, 0, 0}, {0, cos(gamma), -sin(gamma)}, {0, sin(gamma), cos(gamma)}};
+    double g1[3][3] = {{1, 0, 0}, {0, cos(roll), -sin(roll)}, {0, sin(roll), cos(roll)}};
     double g[3] = {0};
     for (int i = 0; i < 3; ++i) {
         g[i] = g1[i][0] * b[0] + g1[i][1] * b[1] + g1[i][2] * b[2];
     }
 
-    double d2[3][3] = {{cos(delta), 0, sin(delta)}, {0, 1, 0}, {-sin(delta), 0, cos(delta)}};
+    double d2[3][3] = {{cos(pitch2), 0, sin(pitch2)}, {0, 1, 0}, {-sin(pitch2), 0, cos(pitch2)}};
     double d[3] = {0};
     for (int i = 0; i < 3; ++i) {
         d[i] = d2[i][0] * g[0] + d2[i][1] * g[1] + d2[i][2] * g[2];
     }
 
-    double i1[3][3] = {{cos(iota), -sin(iota), 0}, {sin(iota), cos(iota), 0}, {0, 0, 1}};
+    double i1[3][3] = {{cos(yaw2), -sin(yaw2), 0}, {sin(yaw2), cos(yaw2), 0}, {0, 0, 1}};
     for (int i = 0; i < 3; ++i) {
         result[i] = i1[i][0] * d[0] + i1[i][1] * d[1] + i1[i][2] * d[2];
     }
